@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<!-- saved from url=(0038)https://gambling.mgservices.ru/mimines -->
+<html lang="ru" style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра</title>
+    <style>
+         @font-face {
+            font-family: 'Intro';
+            src: url('intro.otf') format('opentype');
+        }
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; /* Расположение элементов по вертикали */
+            justify-content: center; /* Выравнивание по центру */
+            align-items: center;
+            background-color: #0875c7;
+        }
+
+        /* Добавляем стиль для заголовка */
+        .header-text {
+            position: fixed;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-family: 'Intro', sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 100;
+            background-color: rgba(0, 136, 204, 0.7);
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            border: 3px solid #29b6f6;
+            border-radius: 30px;
+            width: 320px;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .header-text:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background-color: rgba(0, 136, 204, 0.9);
+        }
+
+        .header-text img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .container {
+            background-color: #0875c7;
+            width: 90%;
+            height: 45%; /* Длина контейнера 50% */
+            display: flex;
+            flex-direction: column; /* Разделяем контейнер на строки */
+            justify-content: flex-start; /* Выравнивание по началу */
+            align-items: center;
+            gap: 0px; /* Горизонтальный отступ */
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 7px; /* Отступ между строками */
+            margin-bottom: 5px;
+        }
+
+        .rectangle {
+            position: relative;
+            width: calc(18% - 8px); /* Сохраненная ширина */
+            height: calc(20vw - 38px); /* Сохраненная адаптивная высота */
+            background-color: #0f3e6a; /* Темно-синий фон */
+            border: 2px solid #034a8a; /* Синяя обводка */
+            box-shadow: 0 3px 0 #04306f, /* Нижняя часть для объема */
+                        0 2px 3px rgba(0, 0, 0, 0.3); /* Тень */
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flipped {
+            transform: rotateY(180deg);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        .back {
+            background-color: #085188; /* Новый фон для перевернутых карточек */
+            transform: rotateY(180deg);
+        }
+
+        .back img {
+            object-fit: contain;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Центрирование изображения */
+        }
+
+
+
+
+        .circle {
+            width: 45%; /* Размер круга */
+            height: 60%; /* Размер круга */
+            background: linear-gradient(to bottom, #1b4a90, #1e5395, #1e5b9c); /* Градиентный круг */
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Центрирование круга */
+        }
+        .mines-oval {
+            width: 120px;
+            height: 30px;
+            background-color: #095390;
+            border: 2px solid #034a8a;
+            border-radius: 50px; /* Делаем контейнер овальным */
+            display: flex;
+            justify-content: space-between; /* Выравниваем элементы по горизонтали */
+            align-items: center;
+            padding: 0 10px; /* Внутренний отступ */
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-size: 14px; /* Немного уменьшенный шрифт для лейбла */
+            color: white;
+            margin-left: 25%;
+            font-family: 'Intro', sans-serif;
+        }
+
+        select {
+            font-family: 'Intro', sans-serif;
+            padding: 2px;
+            font-size: 14px;
+            border: 1px solid #034a8a;
+            border-radius: 5px;
+            background-color: #095390;
+            color: white;
+            cursor: pointer;
+            appearance: none; /* Скрываем стандартный вид селектора */
+            margin-right: 8%;
+        }
+
+        select:hover {
+            background-color: #085188; /* Немного более темный цвет при наведении */
+        }
+
+        select:focus {
+            outline: none;
+            border-color: white; /* Зеленая обводка при фокусе */
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Отступ между кнопками */
+            margin-top: 5px;
+        }
+        .bet-button {
+            font-family: 'Intro', sans-serif;
+            width: 200px;
+            height: 50px;
+            padding: 10px 30px;
+            background: linear-gradient(135deg, #277100, #4f9000, #276a00); /* Градиент от темно-зеленого к светло-зеленому */
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень для объема */
+        }
+
+
+        .bet-button:hover {
+            background-color: #218838; /* Более темный зеленый при наведении */
+        }
+
+        .restart-button {
+            width: 50px;
+            height: 50px;
+            background-color: #0051ba; /* Прозрачный фон */
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 50%; /* Делаем кнопку круглой */
+        }
+
+        .restart-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Изображение занимает всю кнопку */
+        }
+         header {
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            font-family: 'Intro', Arial, sans-serif;
+            box-sizing: border-box;
+            font-size: 24px;
+        }
+        header img {
+            height: 30px;
+            width: 30px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+       .tab {
+            position: fixed;
+            bottom: 0;
+            z-index: 10;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            padding: 10px 0;
+            border-radius: 50px;
+            height: 70px; /* Фиксированная высота для десктопа */
+        }
+
+        .tab button {
+            background-color: inherit;
+            flex: 1 0 auto;
+            margin: 0 10px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 20px;
+            transition: 0.3s;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            font-size: 16px;
+            font-family: 'Intro', Arial, sans-serif;
+        }
+
+        .tab button img {
+            max-width: 38px;
+            height: 38px;
+        }
+
+        .tab button:hover {
+            background-color: #555;
+            transform: translateY(-2px);
+        }
+
+        .tab button.active {
+            background-color: #666;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Медиазапросы для адаптации на мобильных устройствах */
+        @media (max-width: 768px) {
+            .tab {
+                height: 70px; /* Фиксированная высота для планшетов */
+            }
+
+            .tab button {
+                margin: 0 5px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .tab button img {
+                max-width: 32px;
+                height: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab {
+                height: 70px; /* Фиксированная высота для мобильных устройств */
+            }
+
+
+            .tab button {
+                margin: 0 3px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .tab button img {
+                max-width: 28px;
+                height: 28px;
+            }
+        }
+                /* Убираем синий эффект выделения при нажатии на мобильных устройствах */
+        button, select, input, textarea, a {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-focus-ring-color: transparent;
+            outline: none;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent; /* Убирает подсветку при нажатии на любом элементе */
+            -webkit-touch-callout: none; /* Отключает вызов меню на долгий тап */
+        }
+
+
+        /* Улучшаем стили для кнопки Telegram */
+        .telegram-button {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0088cc, #29b6f6, #0088cc);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-family: 'Intro', sans-serif;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,136,204,0.6);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .telegram-button:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 6px 18px rgba(0,136,204,0.7);
+        }
+
+        .telegram-button img {
+            width: 30px;
+            height: 30px;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 12px rgba(0,136,204,0.6);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(0,136,204,0.9);
+            }
+            100% {
+                box-shadow: 0 4px 12px rgba(0,136,204,0.6);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .telegram-button {
+                font-size: 18px;
+                padding: 12px 24px;
+            }
+            
+            .telegram-button img {
+                width: 24px;
+                height: 24px;
+            }
+
+            .header-text {
+                width: 280px;
+                font-size: 22px;
+                padding: 10px 0;
+            }
+            
+            .header-text img {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        /* Стили для кнопки Switch Multiple */
+        .switch-multiple-btn {
+            font-family: 'Intro', sans-serif;
+            background-color: #095390;
+            color: white;
+            border: 2px solid #034a8a;
+            border-radius: 20px;
+            padding: 8px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .switch-multiple-btn:hover {
+            background-color: #085188;
+        }
+
+        .switch-multiple-btn.active {
+            background-color: #fb9317;
+            border-color: #fb9317;
+        }
+
+        /* Стили для кастомного дропдауна */
+        .custom-dropdown {
+            position: relative;
+            width: 60px;
+            font-family: 'Intro', sans-serif;
+        }
+
+        .custom-dropdown-select {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #095390;
+            color: white;
+            padding: 8px 10px;
+            border: 2px solid #034a8a;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .custom-dropdown-select:after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid white;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-dropdown.open .custom-dropdown-select:after {
+            transform: rotate(180deg);
+        }
+
+        .custom-dropdown-select:hover {
+            background-color: #085188;
+        }
+
+        .custom-dropdown-options {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background-color: #095390;
+            border: 2px solid #034a8a;
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 999;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .custom-dropdown.open .custom-dropdown-options {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .custom-dropdown-option {
+            padding: 8px 10px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-dropdown-option:hover {
+            background-color: #0b6cb8;
+        }
+
+        .custom-dropdown-option.selected {
+            background-color: #0088cc;
+            font-weight: bold;
+        }
+
+        /* Анимация для дропдауна */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Скроллбар для дропдауна */
+        .custom-dropdown-options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-dropdown-options::-webkit-scrollbar-track {
+            background: #04407a;
+            border-radius: 10px;
+        }
+
+        .custom-dropdown-options::-webkit-scrollbar-thumb {
+            background: #29b6f6;
+            border-radius: 10px;
+        }
+
+        .custom-dropdown-options::-webkit-scrollbar-thumb:hover {
+            background: #0088cc;
+        }
+
+        /* Скрываем стандартный селект на Android и PC */
+        .device-android select, .device-pc select {
+            display: none;
+        }
+        
+        /* Скрываем кастомный дропдаун на iPhone */
+        .device-iphone .custom-dropdown {
+            display: none;
+        }
+
+    </style>
+<style type="text/css">.vue-slider-dot{position:absolute;-webkit-transition:all 0s;transition:all 0s;z-index:5}.vue-slider-dot:focus{outline:none}.vue-slider-dot-tooltip{position:absolute;visibility:hidden}.vue-slider-dot-hover:hover .vue-slider-dot-tooltip,.vue-slider-dot-tooltip-show{visibility:visible}.vue-slider-dot-tooltip-top{top:-10px;left:50%;-webkit-transform:translate(-50%,-100%);transform:translate(-50%,-100%)}.vue-slider-dot-tooltip-bottom{bottom:-10px;left:50%;-webkit-transform:translate(-50%,100%);transform:translate(-50%,100%)}.vue-slider-dot-tooltip-left{left:-10px;top:50%;-webkit-transform:translate(-100%,-50%);transform:translate(-100%,-50%)}.vue-slider-dot-tooltip-right{right:-10px;top:50%;-webkit-transform:translate(100%,-50%);transform:translate(100%,-50%)}</style><style type="text/css">.vue-slider-marks{position:relative;width:100%;height:100%}.vue-slider-mark{position:absolute;z-index:1}.vue-slider-ltr .vue-slider-mark,.vue-slider-rtl .vue-slider-mark{width:0;height:100%;top:50%}.vue-slider-ltr .vue-slider-mark-step,.vue-slider-rtl .vue-slider-mark-step{top:0}.vue-slider-ltr .vue-slider-mark-label,.vue-slider-rtl .vue-slider-mark-label{top:100%;margin-top:10px}.vue-slider-ltr .vue-slider-mark{-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.vue-slider-ltr .vue-slider-mark-step{left:0}.vue-slider-ltr .vue-slider-mark-label{left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}.vue-slider-rtl .vue-slider-mark{-webkit-transform:translate(50%,-50%);transform:translate(50%,-50%)}.vue-slider-rtl .vue-slider-mark-step{right:0}.vue-slider-rtl .vue-slider-mark-label{right:50%;-webkit-transform:translateX(50%);transform:translateX(50%)}.vue-slider-btt .vue-slider-mark,.vue-slider-ttb .vue-slider-mark{width:100%;height:0;left:50%}.vue-slider-btt .vue-slider-mark-step,.vue-slider-ttb .vue-slider-mark-step{left:0}.vue-slider-btt .vue-slider-mark-label,.vue-slider-ttb .vue-slider-mark-label{left:100%;margin-left:10px}.vue-slider-btt .vue-slider-mark{-webkit-transform:translate(-50%,50%);transform:translate(-50%,50%)}.vue-slider-btt .vue-slider-mark-step{top:0}.vue-slider-btt .vue-slider-mark-label{top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.vue-slider-ttb .vue-slider-mark{-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}.vue-slider-ttb .vue-slider-mark-step{bottom:0}.vue-slider-ttb .vue-slider-mark-label{bottom:50%;-webkit-transform:translateY(50%);transform:translateY(50%)}.vue-slider-mark-label,.vue-slider-mark-step{position:absolute}</style><style type="text/css">.vue-slider{position:relative;-webkit-box-sizing:content-box;box-sizing:content-box;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;display:block;-webkit-tap-highlight-color:rgba(0,0,0,0)}.vue-slider-rail{position:relative;width:100%;height:100%;-webkit-transition-property:width,height,left,right,top,bottom;transition-property:width,height,left,right,top,bottom}.vue-slider-process{position:absolute;z-index:1}</style></head>
+<body>
+
+
+    <div class="mines-oval">
+        <label for="mines">Mines:</label>
+        <!-- Стандартный селект (будет виден только на iPhone) -->
+        <select id="mines">
+            <!-- Опции от 1 до 20 -->
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+        </select>
+        
+        <!-- Кастомный дропдаун (будет виден только на Android и PC) -->
+        <div class="custom-dropdown">
+            <div class="custom-dropdown-select">1</div>
+            <div class="custom-dropdown-options">
+                <div class="custom-dropdown-option selected" data-value="1">1</div>
+                <div class="custom-dropdown-option" data-value="2">2</div>
+                <div class="custom-dropdown-option" data-value="3">3</div>
+                <div class="custom-dropdown-option" data-value="4">4</div>
+                <div class="custom-dropdown-option" data-value="5">5</div>
+                <div class="custom-dropdown-option" data-value="6">6</div>
+                <div class="custom-dropdown-option" data-value="7">7</div>
+                <div class="custom-dropdown-option" data-value="8">8</div>
+                <div class="custom-dropdown-option" data-value="9">9</div>
+                <div class="custom-dropdown-option" data-value="10">10</div>
+                <div class="custom-dropdown-option" data-value="11">11</div>
+                <div class="custom-dropdown-option" data-value="12">12</div>
+                <div class="custom-dropdown-option" data-value="13">13</div>
+                <div class="custom-dropdown-option" data-value="14">14</div>
+                <div class="custom-dropdown-option" data-value="15">15</div>
+                <div class="custom-dropdown-option" data-value="16">16</div>
+                <div class="custom-dropdown-option" data-value="17">17</div>
+                <div class="custom-dropdown-option" data-value="18">18</div>
+                <div class="custom-dropdown-option" data-value="19">19</div>
+                <div class="custom-dropdown-option" data-value="20">20</div>
+            </div>
+        </div>
+    </div>
+    <!-- Добавляем кнопку Switch Multiple -->
+    <button id="switchMultiple" class="switch-multiple-btn">Switch Multiple</button>
+    <div class="container">
+        <!-- 5 строк по 5 прямоугольников -->
+        <div class="row">
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+            <div class="rectangle">
+                <div class="front"><div class="circle"></div></div>
+                <div class="back"></div>
+            </div>
+        </div>
+    </div>
+    <div class="button-container">
+        <button class="restart-button">
+            <img src="miminesrestart.png" alt="Restart">
+        </button>
+        <button class="bet-button">Bet</button>
+    </div>
+
+
+
+    <div class="tab">
+        <button class="tablinks games-icon" data-tab="Games" onclick="window.location.href='https://entypublic.github.io/dogmain/';">
+            <img src="back.png" alt="Игры">
+        </button>
+    </div>
+    <script src="telegram-web-app.js.Без названия"></script>
+<script>
+let isHighMultiple = false;
+
+// Определение типа устройства и добавление соответствующего класса к body
+function detectDevice() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const body = document.body;
+    
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+        body.classList.add('device-iphone');
+    } else if (/android/.test(userAgent)) {
+        body.classList.add('device-android');
+    } else {
+        body.classList.add('device-pc');
+    }
+}
+
+// Вызываем функцию при загрузке страницы
+window.addEventListener('DOMContentLoaded', detectDevice);
+
+function triggerHapticFeedback() {
+    if (window.Telegram && window.Telegram.WebApp.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    }
+}
+
+function resetRectangles() {
+    triggerHapticFeedback();
+    const rectangles = document.querySelectorAll('.rectangle');
+    rectangles.forEach((rectangle) => {
+        // Убираем класс flipped
+        rectangle.classList.remove('flipped');
+
+        // Сбрасываем заднюю сторону
+        const back = rectangle.querySelector('.back');
+        back.innerHTML = ''; // Очищаем заднюю сторону
+        back.style.background = '#085188';  // Возвращаем стандартный темно-синий фон
+        back.style.borderRadius = '8px';  // Закругленные углы
+        back.style.boxShadow = '0 3px 0 #04306f, 0 2px 3px rgba(0, 0, 0, 0.3)';  // Восстанавливаем исходные тени
+
+        // Восстанавливаем переднюю сторону с кругом
+        const front = rectangle.querySelector('.front');
+        front.innerHTML = ''; // Очищаем содержимое передней стороны
+        const circle = document.createElement('div');
+        circle.classList.add('circle'); // Добавляем круг заново
+        front.appendChild(circle);
+    });
+}
+
+function toggleMultiple() {
+    triggerHapticFeedback();
+    isHighMultiple = !isHighMultiple;
+    document.getElementById('switchMultiple').classList.toggle('active', isHighMultiple);
+}
+
+function flipRectangles() {
+    triggerHapticFeedback();
+    const rectangles = document.querySelectorAll('.rectangle');
+    const minesCount = parseInt(document.getElementById('mines').value);
+    let starCount = 0;
+
+    // Устанавливаем количество звезд в зависимости от выбранного числа мин
+    if (isHighMultiple) {
+        // Новая система: 1 ловушка = 24 звезды, 2 ловушки = 23 звезды и т.д.
+        if (minesCount >= 1 && minesCount <= 24) {
+            starCount = 25 - minesCount;
+        } else {
+            starCount = 1; // Минимум 1 звезда
+        }
+    } else {
+        // Оригинальная система
+        switch (minesCount) {
+            case 1:
+                starCount = 10; // 1 ловушка = 10 звезд
+                break;
+            case 2:
+                starCount = 9; // 2 ловушки = 9 звезд
+                break;
+            case 3:
+                starCount = 8; // 3 ловушки = 8 звезд
+                break;
+            case 4:
+                starCount = 7; // 4 ловушки = 7 звезд
+                break;
+            case 5:
+                starCount = 6; // 5 ловушек = 6 звезд
+                break;
+            case 6:
+                starCount = 5; // 6 ловушек = 5 звезд
+                break;
+            case 7:
+                starCount = 4; // 7 ловушек = 4 звезды
+                break;
+            case 8:
+                starCount = 3; // 8 ловушек = 3 звезды
+                break;
+            case 9:
+                starCount = 3; // 9 ловушек = 3 звезды
+                break;
+            case 10:
+                starCount = 2; // 10 ловушек = 2 звезды
+                break;
+            case 11:
+                starCount = 2; // 11 ловушек = 2 звезды
+                break;
+            case 12:
+                starCount = 2; // 12 ловушек = 2 звезды
+                break;
+            case 13:
+                starCount = 1; // 13 ловушек = 1 звезда
+                break;
+            case 14:
+                starCount = 1; // 14 ловушек = 1 звезда
+                break;
+            case 15:
+                starCount = 1; // 15 ловушек = 1 звезда
+                break;
+            case 16:
+                starCount = 1; // 16 ловушек = 1 звезда
+                break;
+            case 17:
+                starCount = 1; // 17 ловушек = 1 звезда
+                break;
+            case 18:
+                starCount = 1; // 18 ловушек = 1 звезда
+                break;
+            case 19:
+                starCount = 1; // 19 ловушек = 1 звезда
+                break;
+            case 20:
+                starCount = 1; // 20 ловушек = 1 звезда
+                break;
+            default:
+                starCount = 0;
+        }
+    }
+
+    // Сбрасываем все ячейки перед выбором новых
+    rectangles.forEach((rectangle) => {
+        rectangle.classList.remove('flipped');
+        const back = rectangle.querySelector('.back');
+        back.innerHTML = '';  // Очищаем изображение, если есть
+        back.style.background = '#085188';  // Возвращаем стандартный темно-синий фон
+        back.style.borderRadius = '8px';  // Закругленные углы
+        back.style.boxShadow = '0 3px 0 #04306f, 0 2px 3px rgba(0, 0, 0, 0.3)';  // Изначальные тени
+
+        // Восстанавливаем круг по центру передней части
+        const front = rectangle.querySelector('.front');
+        front.innerHTML = '';  // Очищаем переднюю сторону
+        const circle = document.createElement('div');
+        circle.classList.add('circle');
+        front.appendChild(circle);
+    });
+
+    const starIndexes = new Set();
+
+    while (starIndexes.size < starCount) {
+        const randomIndex = Math.floor(Math.random() * rectangles.length);
+        starIndexes.add(randomIndex);
+    }
+
+    // Окрашиваем только выбранные ячейки
+    rectangles.forEach((rectangle, index) => {
+        if (starIndexes.has(index)) {
+            rectangle.classList.add('flipped');
+            const back = rectangle.querySelector('.back');
+            const img = document.createElement('img');
+            img.src = 'miminesstar.png';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            back.appendChild(img);
+
+            // Добавляем градиент оранжевого цвета и сохраняем закругление углов и тени
+            back.style.background = "linear-gradient(to bottom, #fbbf19, #fcb21c, #fb9317)";
+            back.style.borderRadius = '8px';  // Закругленные углы
+            back.style.boxShadow = '0 3px 0 #fb9317, 0 2px 3px rgba(0, 0, 0, 0.3)';  // Оранжевая тень
+        }
+    });
+}
+
+document.querySelector('.bet-button').addEventListener('click', flipRectangles);
+document.querySelector('.restart-button').addEventListener('click', resetRectangles);
+document.getElementById('switchMultiple').addEventListener('click', toggleMultiple);
+
+// Инициализация кастомного дропдауна
+function initCustomDropdown() {
+    const dropdown = document.querySelector('.custom-dropdown');
+    const select = document.querySelector('.custom-dropdown-select');
+    const options = document.querySelector('.custom-dropdown-options');
+    const optionItems = document.querySelectorAll('.custom-dropdown-option');
+    const standardSelect = document.getElementById('mines');
+    
+    // Открытие/закрытие дропдауна
+    select.addEventListener('click', function() {
+        dropdown.classList.toggle('open');
+        triggerHapticFeedback();
+    });
+    
+    // Закрытие дропдауна при клике вне его
+    document.addEventListener('click', function(event) {
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove('open');
+        }
+    });
+    
+    // Выбор опции
+    optionItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            select.textContent = value;
+            
+            // Обновляем стандартный селект для синхронизации
+            standardSelect.value = value;
+            
+            // Обновляем класс выбранной опции
+            optionItems.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            // Закрываем дропдаун
+            dropdown.classList.remove('open');
+            triggerHapticFeedback();
+        });
+    });
+    
+    // Синхронизация при изменении стандартного селекта (для iPhone)
+    standardSelect.addEventListener('change', function() {
+        select.textContent = this.value;
+        optionItems.forEach(opt => {
+            if (opt.getAttribute('data-value') === this.value) {
+                opt.classList.add('selected');
+            } else {
+                opt.classList.remove('selected');
+            }
+        });
+    });
+}
+
+// Вызываем инициализацию дропдауна после загрузки страницы
+window.addEventListener('DOMContentLoaded', initCustomDropdown);
+</script>
+
+</body><div class="troywell-caa"><template shadowrootmode="open">
+    <style>
+    @import url("chrome-extension://adlpodnneegcnbophopdmhedicjbcgco/caa/styles.css");
+    </style>
+    <div id="troywell-caa" data-v-app=""><div data-v-f572ef8e="" class="content-app"><!----></div></div></template></div><div class="troywell-avia"><template shadowrootmode="open">
+    <style>
+    @import url("chrome-extension://adlpodnneegcnbophopdmhedicjbcgco/flight/styles.css");
+    </style>
+    <div id="troywell-avia" data-v-app=""><div class="app"><div data-v-dd12f266=""><!----></div></div></div></template></div></html>
