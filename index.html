@@ -144,6 +144,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 280px;
+            position: relative;
         }
 
         .game img:not(.secretimg) {
@@ -168,6 +170,8 @@
             max-width: 48%;
             margin: 1% 1%;
             padding-top: 10px;
+            min-height: 220px;
+            position: relative;
         }
 
         .game img:not(.secretimg) {
@@ -183,6 +187,10 @@
             width: 100%;
             margin-top: 10px;
             font-family: 'Intro', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         .game h3 {
             font-size: 18px;
@@ -372,7 +380,7 @@
 
         .image-container img {
             margin-top: 20px;
-            margin-left: 45px
+            margin-left: 45px;
             width: 190px;
             height: 140px;
             border-radius: 50%;
@@ -528,7 +536,7 @@
         .dots-container {
             text-align: center;
             padding: 10px;
-            background: #white;
+            background: white;
         }
 
         .dot {
@@ -544,6 +552,19 @@
 
         .dot.active, .dot:hover {
             background-color: #717171;
+        }
+
+        /* Фиксы для стабильного отображения игр */
+        .row .game:last-child {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .row .game:last-child img,
+        .row .game:last-child .game-info,
+        .row .game:last-child button {
+            visibility: visible !important;
+            opacity: 1 !important;
         }
          .loader {
             border: 16px solid transparent;
@@ -859,10 +880,10 @@
             </div>
         </div>
         <div class="game">
-            <img src="aviamast.webp" alt="CoinFlip Preview">
+            <img src="aviamast.webp" alt="Avia Masters Preview">
             <div class="game-info">
-                <h3 id="game-title">Avia Masters</h3>
-                <button id="game13-button" onclick="openGame('aviamast')">Open</button>
+                <h3 id="game14-title">Avia Masters</h3>
+                <button id="game14-button" onclick="openGame('aviamast')">Open</button>
             </div>
         </div>
     </div>
@@ -918,6 +939,8 @@ const translations = {
         game11Button: "Open",
         game12Button: "Open",
         game13Button: "Open",
+        game14Title: "Avia Masters",
+        game14Button: "Open",
         telegramButton: "Go to telegram (RU)",
         telegramButton2: "Go to telegram (EN)"
     },
@@ -948,6 +971,8 @@ const translations = {
         game11Button: "Открыть",
         game12Button: "Открыть",
         game13Button: "Открыть",
+        game14Title: "Avia Masters",
+        game14Button: "Открыть",
         telegramButton: "Перейти в телеграм (RU)",
         telegramButton2: "Перейти в телеграм (EN)"
     },
@@ -978,6 +1003,8 @@ const translations = {
         game11Button: "खोलें",
         game12Button: "खोलें",
         game13Button: "खोलें",
+        game14Title: "Avia Masters",
+        game14Button: "खोलें",
         telegramButton: "टेलीग्राम पर जाएं (RU)",
         telegramButton2: "टेलीग्राम पर जाएं (EN)"
     },
@@ -1008,6 +1035,8 @@ const translations = {
         game11Button: "Abrir",
         game12Button: "Abrir",
         game13Button: "Abrir",
+        game14Title: "Avia Masters",
+        game14Button: "Abrir",
         telegramButton: "Ir para o Telegram (RU)",
         telegramButton2: "Ir para o Telegram (EN)"
     },
@@ -1038,6 +1067,8 @@ const translations = {
         game11Button: "Abrir",
         game12Button: "Abrir",
         game13Button: "Abrir",
+        game14Title: "Avia Masters",
+        game14Button: "Abrir",
         telegramButton: "Ir a Telegram (RU)",
         telegramButton2: "Ir a Telegram (EN)"
     },
@@ -1068,6 +1099,8 @@ const translations = {
         game11Button: "Ochish",
         game12Button: "Ochish",
         game13Button: "Ochish",
+        game14Title: "Avia Masters",
+        game14Button: "Ochish",
         telegramButton: "Telegramga o'tish (RU)",
         telegramButton2: "Telegramga o'tish (EN)"
     },
@@ -1098,6 +1131,8 @@ const translations = {
         game11Button: "Aç",
         game12Button: "Aç",
         game13Button: "Aç",
+        game14Title: "Avia Masters",
+        game14Button: "Aç",
         telegramButton: "Teleqrama keç (RU)",
         telegramButton2: "Teleqrama keç (EN)"
     },
@@ -1128,6 +1163,8 @@ const translations = {
         game11Button: "Aç",
         game12Button: "Aç",
         game13Button: "Aç",
+        game14Title: "Avia Masters",
+        game14Button: "Aç",
         telegramButton: "Telegrame git (RU)",
         telegramButton2: "Telegrame git (EN)"
     },
@@ -1158,6 +1195,8 @@ const translations = {
         game11Button: "Abrir",
         game12Button: "Abrir",
         game13Button: "Abrir",
+        game14Title: "Avia Masters",
+        game14Button: "Abrir",
         telegramButton: "Ir para o Telegram (RU)",
         telegramButton2: "Ir para o Telegram (EN)"
     },
@@ -1188,6 +1227,8 @@ const translations = {
         game11Button: "فتح",
         game12Button: "فتح",
         game13Button: "فتح",
+        game14Title: "Avia Masters",
+        game14Button: "فتح",
         telegramButton: "اذهب إلى Telegram (RU)",
         telegramButton2: "اذهب إلى Telegram (EN)"
     }
@@ -1233,7 +1274,10 @@ const translations = {
 
             document.getElementById('game12-button').innerText = translations[lang].game12Button;
 
-            document.getElementById('game13-button').innerText = translations[lang].game12Button;
+            document.getElementById('game13-button').innerText = translations[lang].game13Button;
+
+            document.getElementById('game14-title').innerText = translations[lang].game14Title;
+            document.getElementById('game14-button').innerText = translations[lang].game14Button;
 
             // Обновляем текст для кнопок Telegram
             document.getElementById('telegram-button').innerText = translations[lang].telegramButton;
